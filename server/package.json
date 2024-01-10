@@ -1,0 +1,22 @@
+{
+  "name": "bishe",
+  "version": "1.0.0",
+  "description": "123321",
+  "main": "index.js",
+  "scripts": {
+    "test": "12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaoguoxing/node-koa-study.git"
+  },
+  "keywords": [
+    "123"
+  ],
+  "author": "wuguoxing",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiaoguoxing/node-koa-study/issues"
+  },
+  "homepage": "https://github.com/xiaoguoxing/node-koa-study#readme"
+}
