@@ -1,5 +1,11 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
+
+fetch('/api/home').then(res=>res.text()).then(res=>{
+  console.log(res);
+})
+
+
 </script>
 
 <template>
