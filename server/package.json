@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/xiaoguoxing/node-koa-study/issues"
   },
-  "homepage": "https://github.com/xiaoguoxing/node-koa-study#readme"
+  "homepage": "https://github.com/xiaoguoxing/node-koa-study#readme",
+  "dependencies": {
+    "koa": "^2.15.0"
+  }
 }
