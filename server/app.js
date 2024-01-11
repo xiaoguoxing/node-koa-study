@@ -1,8 +1,32 @@
 import Koa from 'koa'
 import KoaRouter from 'koa-router'
-
+import mongoose from 'mongoose'
+import config from "./config.js";
 const app = new Koa()
 const router = new KoaRouter()
+
+
+
+async function connectDB() {
+ return   await mongoose.connect(config.db);
+}
+connectDB().then((err) => {
+    console.log('Connecting database successfully');
+}).catch((err) => {
+    console.error('Failed to connect to database');
+})
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.get('/',(ctx,next)=>{
     ctx.body = '根'
