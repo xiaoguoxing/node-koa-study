@@ -40,8 +40,7 @@ router.get('/user', (ctx, next) => {
     ctx.body = 'user';
     next();
 });
-app.use(router.routes())
-app.use(router.allowedMethods())
-app.listen(3000,()=>{
-    console.log('up!!!!!!!');
+app.use(router.routes()).use(router.allowedMethods())
+app.listen(config.port,()=>{
+    console.log('fucking!!!!!!!');
 });
