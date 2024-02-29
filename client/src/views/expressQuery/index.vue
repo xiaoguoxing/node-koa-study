@@ -1,29 +1,29 @@
 <template>
-  <kr-card class="flex-1 alarm-card-main" :header="'123'" header-border>
-    <template v-if="pageType === 'list'">
-      <kr-pro-table
-          ref="proTable"
-          :columns="columns"
-          :requestApi="getTableList"
-          :initParam="initParam"
-          :searchCol="{ xs: 1, sm: 1, md: 4, lg: 4, xl: 4 }"
-          selectId="id"
-          title="预置位配置"
-          titleBorder
-          :border="false"
-          :outBorder="false"
-          colSetAble
-      >
-        <!-- 表格操作 -->
-        <template #operation="{ row }">
-          <el-button type="primary" link @click="toDetailPage('detail', row)">编辑</el-button>
-          <el-button type="primary" link>删除</el-button>
-        </template>
-      </kr-pro-table>
-    </template>
-    <template v-else-if="pageType === 'detail'">
-    </template>
-  </kr-card>
+    <kr-card class="flex-1 alarm-card-main" :header="'快递查询'" header-border>
+      <template v-if="pageType === 'list'">
+        <kr-pro-table
+            ref="proTable"
+            :columns="columns"
+            :requestApi="getTableList"
+            :initParam="initParam"
+            :searchCol="{ xs: 1, sm: 1, md: 4, lg: 4, xl: 4 }"
+            selectId="id"
+            title="预置位配置"
+            titleBorder
+            :border="false"
+            :outBorder="false"
+            colSetAble
+        >
+          <!-- 表格操作 -->
+          <template #operation="{ row }">
+            <el-button type="primary" link @click="toDetailPage('detail', row)">编辑</el-button>
+            <el-button type="primary" link>删除</el-button>
+          </template>
+        </kr-pro-table>
+      </template>
+      <template v-else-if="pageType === 'detail'">
+      </template>
+    </kr-card>
 </template>
 <script setup lang="jsx">
 import { ref, reactive, onMounted } from 'vue';

@@ -18,15 +18,38 @@ export const staticRouter = [
     path: '/layout',
     name: 'layout',
     component: () => import('@/layouts/index.vue'),
+    redirect: '/expressAdd',
     children: [
-      // {
-      //   path: '/test',
-      //   name: 'test',
-      //   component: () => import('@/views/test.vue'),
-      //   meta: {
-      //     title: 'test',
-      //   },
-      // },
+      {
+        path: '/home',
+        name: 'home',
+        component: () => import('@/views/home/index.vue'),
+        meta: {
+          title: '首页',
+          isAside:false,
+          isBread:false
+        },
+      },
+      {
+        path: '/expressManage/expressAdd',
+        name: 'expressAdd',
+        component: () => import('@/views/expressAdd/index.vue'),
+        meta: {
+          title: '新增快递订单',
+          isAside:true,
+          isBread:true
+        },
+      },
+      {
+        path: '/expressManage/expressQuery',
+        name: 'expressQuery',
+        component: () => import('@/views/expressQuery/index.vue'),
+        meta: {
+          title: '快递查询',
+          isAside:true,
+          isBread:true
+        },
+      },
       // //运管中心
       // {
       //   path: '/optCenter',
