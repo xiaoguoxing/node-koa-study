@@ -1,9 +1,19 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import { staticRouter } from '@/routers/modules/staticRouter';
-
+import localRouter from '@/assets/js/dynamicRouter.js'
+// 引入 views 文件夹下所有 vue 文件
+const modules = import.meta.glob('@/views/**/*.vue');
 //白名单
 const whiteList = ['/login', '/register'];
+function getFlatArr(menuList) {
+  let newMenuList= JSON.parse(JSON.stringify(menuList));
+  return newMenuList.reduce((pre, current) => {
+    let flatArr = [...pre, current];
+    if (current.children) flatArr = [...flatArr, ...getFlatArr(current.children)];
+    return flatArr;
+  }, []);
+}
 
 /**
  * @description 动态路由参数配置简介
@@ -27,4 +37,33 @@ const router = createRouter({
   strict: false,
   scrollBehavior: () => ({ left: 0, top: 0 }),
 });
+let flatMenuListGet = getFlatArr(localRouter)
+
+flatMenuListGet.forEach((item) => {
+  item.children && delete item.children;
+  if (item.component) {
+    item.component = modules['/src/views' + item.component + '.vue'];
+  }
+  if (item.meta.isFull) {
+    router.addRoute(item);
+  } else {
+    router.addRoute('layout', item);
+  }
+})
+router.beforeEach(async (to, from, next) => {
+
+
+  // 2.动态设置标题
+  document.title = to.meta.title ? `${to.meta.title} - 快递收发系统` : '快递收发系统';
+
+
+  // 6.如果没有菜单列表，就重新请求菜单列表并添加动态路由
+
+
+  // 7.正常访问页面
+  next();
+});
+
+
+
 export default router;

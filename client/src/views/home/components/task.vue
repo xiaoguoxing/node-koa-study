@@ -1,7 +1,7 @@
 <template>
   <kr-card header="每日收取快递（件）" :border="false">
     <template #headerRight>
-      <div class="bolck" style="width: 230px">
+      <div class="bolck">
         <el-date-picker
           v-model="dateValue"
           type="daterange"

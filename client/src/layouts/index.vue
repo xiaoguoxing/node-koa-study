@@ -7,16 +7,40 @@
       </div>
       <div  class="header-center">
         <el-menu
-            :default-active="route.path"
+            :default-active="activeMenu"
             class="el-menu-demo"
             mode="horizontal"
+            popper-class="header-menu"
             background-color="transparent"
             text-color="#fff"
             active-text-color="#fff"
-            @select="handleSelect"
             router
         >
-          <el-menu-item v-for="item in dynamicRouter" :key="item.path" :index="item.path">{{item.meta.title}}</el-menu-item>
+          <template  v-for="subItem in menuList" :key="subItem.path">
+            <el-sub-menu v-if="subItem.children" :index="subItem.path">
+              <template #title>{{ subItem.meta.title }}</template>
+              <el-menu-item  v-for="subItem2 in subItem.children" :key="subItem2.path" :index="subItem2.path" @click="handleClickMenu(subItem2)">
+                <el-icon>
+                  <component :is="subItem2.meta.icon"></component>
+                </el-icon>
+                <template #title>
+                  <span>{{ subItem2.meta.title }}</span>
+                </template>
+              </el-menu-item>
+            </el-sub-menu>
+            <el-menu-item
+                v-else
+                :index="subItem.path"
+                @click="handleClickMenu(subItem)"
+            >
+              <el-icon>
+                <component :is="subItem.meta.icon"></component>
+              </el-icon>
+              <template #title>
+                <span>{{ subItem.meta.title }}</span>
+              </template>
+            </el-menu-item>
+          </template>
         </el-menu>
       </div>
       <div class="header-right">
@@ -28,25 +52,49 @@
       </div>
     </el-header>
     <el-container>
-      <el-aside v-if="route.meta.isAside && (child.length)" width="200px">
-        <el-menu
-            :default-active="route.path"
-            background-color="transparent"
-            text-color="#fff"
-            active-text-color="#fff"
-            @select="handleSelect2"
-            router
-        >
-          <el-menu-item v-for="item in child" :key="item.path" :index="item.path">
-            <el-icon><component :is="item.meta.icon" /></el-icon>
-            <span>{{item.meta.title}}</span>
-          </el-menu-item>
-        </el-menu>
+      <el-aside v-if="subMenu.length" width="200px">
+          <el-menu
+              :default-active="activeMenu"
+              :router="false"
+              :collapse-transition="false"
+              :unique-opened="true"
+              popper-class="header-menu"
+              background-color="transparent"
+              text-color="#fff"
+              active-text-color="#fff"
+          >
+            <template  v-for="subItem in subMenu" :key="subItem.path">
+              <el-sub-menu v-if="subItem.children" :index="subItem.path">
+                <template #title>{{ subItem.meta.title }}</template>
+                <el-menu-item  v-for="subItem2 in subItem.children" :key="subItem2.path" :index="subItem2.path" @click="handleClickMenu(subItem2)">
+                  <el-icon>
+                    <component :is="subItem2.meta.icon"></component>
+                  </el-icon>
+                  <template #title>
+                    <span>{{ subItem2.meta.title }}</span>
+                  </template>
+                </el-menu-item>
+              </el-sub-menu>
+              <el-menu-item v-else :index="subItem.path" @click="handleClickMenu(subItem)">
+                <el-icon>
+                  <component :is="subItem.meta.icon"></component>
+                </el-icon>
+                <template #title>
+                  <span>{{ subItem.meta.title }}</span>
+                </template>
+              </el-menu-item>
+            </template>
+          </el-menu>
       </el-aside>
       <el-main>
-        <el-breadcrumb v-if="route.meta.isBread" class="breadcrumbStyle" separator="/">
-        </el-breadcrumb>
-        <div class="model-container":class="{'noBread':!route.meta.isBread}">
+          <el-breadcrumb v-if="!route.meta.isBread" class="breadcrumbStyle" separator="/">
+            <el-breadcrumb-item  v-for="(item, index) in breadcrumbList" :key="item.path">
+              <div class="breadcrumb-item el-breadcrumb__inner is-link" @click="onBreadcrumbClick(item, index)">
+                <span class="breadcrumb-title">{{ item.meta.title }}</span>
+              </div>
+            </el-breadcrumb-item>
+          </el-breadcrumb>
+        <div class="model-container":class="{'noBread':route.meta.isBread}">
           <router-view></router-view>
         </div>
       </el-main>
@@ -55,34 +103,28 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
-import {useRoute} from "vue-router";
-import dynamicRouter from "@/assets/js/dynamicRouter.js";
-
-const child = ref([])
-const bread = ref([])
-const route = useRoute()
-onMounted(()=>{
-  handleSelect(route.path)
-})
-const handleSelect = (key, keyPath) => {
-  let obj = dynamicRouter.find(i=>i.path===key)
-  if(obj){
-    child.value = obj?.children||[]
+import { useRoute,useRouter } from 'vue-router';
+import { computed } from 'vue';
+import {useMenu} from "@/layouts/hooks/useMenu.js";
+const route = useRoute();
+const router = useRouter();
+const { activeMenu, menuList, handleClickMenu ,subMenu} = useMenu();
+const getAllBreadcrumbList = (menuList, result={}, path = []) => {
+  for (const item of menuList) {
+    result[item.path] = [...path, item];
+    if (item.children) getAllBreadcrumbList(item.children, result, result[item.path]);
   }
-}
-const handleSelect2 = (key, keyPath) => {
-
-
-}
+  return result;
+};
+let breadcrumbListGet = getAllBreadcrumbList(menuList.value)
+const breadcrumbList = computed(() => breadcrumbListGet[route.matched[route.matched.length - 1].path]);
+const onBreadcrumbClick = (item, index) => {
+  if (index !== breadcrumbList.value.length - 1) router.push(item.path);
+};
 </script>
 
 <style scoped lang="scss">
 .my-container{
-  --bg-color1:#101d2b;
-  --bg-color2:#fcba02;
-  --bg-color3:#016dc5;
-  --bg-color4:#99bbd5;
   :deep(.el-header){
     --el-header-padding: 0px 10px;
     display: flex;
@@ -103,18 +145,6 @@ const handleSelect2 = (key, keyPath) => {
     }
     .header-center{
       flex: 1;
-      .el-menu{
-        border: none;
-        .el-menu-item{
-          font-size: 14px;
-          font-weight: bold;
-        }
-        .el-menu-item.is-active{
-          background: var(--bg-color3);
-          border-bottom:5px solid var(--bg-color2);
-        }
-
-      }
     }
     .header-right{
       display: flex;
@@ -128,17 +158,6 @@ const handleSelect2 = (key, keyPath) => {
   }
   :deep(.el-aside){
     background: var(--bg-color1);
-    .el-menu{
-      border: none;
-      .el-menu-item{
-        font-size: 14px;
-        font-weight: bold;
-      }
-      .el-menu-item.is-active{
-        background: var(--bg-color3);
-        border-right:5px solid var(--bg-color2);
-      }
-    }
   }
   :deep(.el-main){
     padding: 0 20px 20px;
@@ -149,11 +168,42 @@ const handleSelect2 = (key, keyPath) => {
       height: 40px;
     }
   }
+  :deep(.el-menu){
+    border: none;
+    .el-menu-item{
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .el-sub-menu>.el-sub-menu__title{
+      border: none;
+    }
+    .el-menu-item.is-active{
+      background: var(--bg-color3);
+      border-bottom:5px solid var(--bg-color2);
+    }
+    .el-sub-menu.is-active{
+      background: var(--bg-color3);
+      border-bottom:5px solid var(--bg-color2);
+    }
+
+  }
+
   .model-container{
     height: calc(100% - 40px);
     &.noBread{
       height: calc(100%);
     }
+  }
+}
+</style>
+<style lang="scss">
+.header-menu{
+  padding: 0;
+  background: var(--bg-color1)  !important;
+  border: none !important;
+  .el-menu-item.is-active{
+    background: var(--bg-color3);
+    border-right:5px solid var(--bg-color2);
   }
 }
 </style>

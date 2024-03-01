@@ -10,13 +10,14 @@ export default [
       "isHide": false,
       "isFull": false,
       "isAffix": false,
-      "isKeepAlive": true
+      "isKeepAlive": true,
+      isBread:true
     }
   },
   {
-    "path": "/expressManage/expressAdd",
-    "name": "appCenter",
-    "redirect": "/appCenter/inspectionMonitor/watchingMonitor",
+    "path": "/expressManage",
+    "name": "expressManage",
+    "redirect": "/expressManage/expressAdd",
     "meta": {
       "icon": "Briefcase",
       "title": "快递管理",
@@ -29,8 +30,8 @@ export default [
     "children": [
       {
         "path": "/expressManage/expressAdd",
-        "name": "linkage",
-        "component": "/appCenter/linkage/index",
+        "name": "expressAdd",
+        "component": "/expressManage/expressAdd/index",
         "meta": {
           "icon": "Edit",
           "title": "新增快递单",
@@ -43,8 +44,8 @@ export default [
       },
       {
         "path": "/expressManage/expressQuery",
-        "name": "appCenterAlarm",
-        "component": "/appCenter/alarm/index",
+        "name": "expressQuery",
+        "component": "/expressManage/expressQuery/index",
         "meta": {
           "icon": "Search",
           "title": "快递查询",
