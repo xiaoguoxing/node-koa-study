@@ -19,6 +19,9 @@
 
   // el-table 表格样式
   .el-table {
+    .el-table__expanded-cell[class*=cell]{
+      padding: 20px 50px;
+    }
     // flex: 1;
     // min-height: 200px;
 

@@ -57,5 +57,35 @@ export default [
         }
       }
     ]
+  },
+  {
+    "path": "/sys",
+    "name": "sys",
+    "redirect": "/sys/dict",
+    "meta": {
+      "icon": "Briefcase",
+      "title": "系统管理",
+      "isLink": "",
+      "isHide": false,
+      "isFull": false,
+      "isAffix": false,
+      "isKeepAlive": true
+    },
+    "children": [
+      {
+        "path": "/sys/dict",
+        "name": "dict",
+        "component": "/sys/dict/index",
+        "meta": {
+          "icon": "Edit",
+          "title": "字典管理",
+          "isLink": "",
+          "isHide": false,
+          "isFull": false,
+          "isAffix": false,
+          "isKeepAlive": true
+        }
+      },
+    ]
   }
 ]

@@ -1,46 +1,28 @@
 import Koa from 'koa'
 import KoaRouter from 'koa-router'
 import mongoose from 'mongoose'
+import KoaBodyParser from 'koa-bodyparser'
 import config from "./config.js";
+import installRouter from "./routes/index.js";
+
 const app = new Koa()
 const router = new KoaRouter()
 
 
-
 async function connectDB() {
- return   await mongoose.connect(config.db);
+    return await mongoose.connect(config.db);
 }
+
 connectDB().then((err) => {
     console.log('Connecting database successfully');
 }).catch((err) => {
     console.error('Failed to connect to database');
 })
 
+app.use(KoaBodyParser());
 
+installRouter(app)
 
-
-
-
-
-
-
-
-
-
-
-router.get('/',(ctx,next)=>{
-    ctx.body = '根'
-    next();
-});
-router.get('/home',(ctx,next)=>{
-    ctx.body = 'home'
-    next();
-});
-router.get('/user', (ctx, next) => {
-    ctx.body = 'user';
-    next();
-});
-app.use(router.routes()).use(router.allowedMethods())
-app.listen(config.port,()=>{
+app.listen(config.port, () => {
     console.log('fucking!!!!!!!');
 });

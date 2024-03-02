@@ -91,7 +91,7 @@ const props = defineProps({
     default:true
   },
   btnText: {
-    type:[String, String],
+    type:Array,
     default(){
       return ['取消', '确定']
     }

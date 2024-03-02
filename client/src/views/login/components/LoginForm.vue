@@ -1,7 +1,7 @@
 <template>
   <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" size="large">
-    <el-form-item prop="account">
-      <el-input v-model="loginForm.account" placeholder="用户名">
+    <el-form-item prop="username">
+      <el-input v-model="loginForm.username" placeholder="用户名">
         <template #prefix>
           <el-icon class="el-input__icon"><user /></el-icon>
         </template>
@@ -22,56 +22,54 @@
     </el-form-item>
   </el-form>
   <div class="login-btn">
-    <el-button  round @click="resetForm(loginFormRef)" size="large">注册</el-button>
-    <el-button icon="UserFilled" round @click="login(loginFormRef)" size="large" type="primary" :loading="loading">
-      登录
-    </el-button>
+    <template v-if="!isreg">
+      <el-button  round @click="regBtn" size="large">注册</el-button>
+      <el-button icon="UserFilled" round @click="login(loginFormRef)" size="large" type="primary" :loading="loading">
+        登录
+      </el-button>
+    </template>
+   <template v-else>
+     <el-button icon="UserFilled" round @click="regBtn" size="large"  :loading="loading">
+       登录
+     </el-button>
+     <el-button  round @click="login(loginFormRef)" type="primary" size="large">注册</el-button>
+   </template>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus';
-// tsconfig disabled
+import {loginApi,registerApi} from "@/api/model/login.js";
 
-// import md5 from 'js-md5';
 const router = useRouter();
 
 // 定义 formRef（校验规则）
 const loginFormRef = ref();
 const loginRules = reactive({
-  account: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 });
 
 const loading = ref(false);
-const loginForm = reactive({ account: '', password: '' });
-const login = (formEl) => {
+const isreg = ref(false);
+const loginForm = reactive({ username: '', password: '' });
+const login = async (formEl) => {
   if (!formEl) return;
-  formEl.validate(async (valid) => {
-    if (!valid) return;
+  try {
+    await formEl.validate();
     loading.value = true;
     try {
-      // 1.执行登录接口
-      /*const formData = {
-        account: loginForm.account,
-        password: (await encryptPassword(loginForm.password)),
-      };*/
-      // await loginApi(formData);
-      // TODO:后端改接口接收登录信息
-      // globalStore.setToken(data.access_token);
-
-      // 2.添加动态路由
-
-
-      // 3.清除上个账号的 tab 信息
-      // tabsStore.closeMultipleTab();
-
+      if(isreg.value){
+        await registerApi(loginForm)
+      }else {
+        await loginApi(loginForm)
+      }
       // 4.跳转到首页
       ElNotification({
         title: '',
-        message: '欢迎登录 智能巡检',
+        message: '欢迎登录 快递收发系统',
         type: 'success',
         duration: 3000,
       });
@@ -79,32 +77,24 @@ const login = (formEl) => {
     } finally {
       loading.value = false;
     }
-  });
-};
+  }catch (e) {
 
+  }
+
+};
+function regBtn(){
+  isreg.value = !isreg.value
+  resetForm(loginFormRef.value)
+}
 // resetForm
 const resetForm = (formEl) => {
   if (!formEl) return;
   formEl.resetFields();
 };
-// 传给服务端加密后的密码
-const encryptPassword = (val) => {
-  return new Promise((resolve, reject) => {
-    /*getPublicKeyApi()
-      .then((res) => {
-        const encryptor = new JSEncrypt();
-        encryptor.setPublicKey(res.data); //设置公钥
-        let rsaPassWord = encryptor.encrypt(val);
-        resolve(rsaPassWord);
-      })
-      .catch((err) => {
-        reject(err);
-      });*/
-  });
-};
+
 onMounted(() => {
   // 监听enter事件（调用登录）
-  document.onkeydown = (e: any) => {
+  document.onkeydown = (e) => {
     e = window.event || e;
     if (e.code === 'Enter' || e.code === 'enter' || e.code === 'NumpadEnter') {
       if (loading.value) return;

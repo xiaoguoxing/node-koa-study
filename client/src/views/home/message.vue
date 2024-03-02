@@ -26,7 +26,7 @@
 
 <script setup name="message" lang="tsx">
 import { ref } from 'vue';
-import myTabs from '@/views/optCenter/aiPatrolManage/component/myTabs.vue';
+import myTabs from '@/components/myTabs.vue';
 
 const options1 = [
   { label: '全部', value: '1' },
