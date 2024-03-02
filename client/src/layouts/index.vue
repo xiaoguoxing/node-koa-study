@@ -220,6 +220,11 @@ function loginOut() {
 
   }
 
+  :deep(.el-container){
+    width: 100%;
+    height: calc(100% - 60px);
+  }
+
   .model-container {
     height: calc(100% - 40px);
 

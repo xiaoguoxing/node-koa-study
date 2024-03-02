@@ -17,7 +17,7 @@
           <!-- 表格操作 -->
           <template #operation="{ row }">
             <el-button type="primary" link @click="toDetailPage('detail', row)">编辑</el-button>
-            <el-button type="primary" link>删除</el-button>
+            <el-button type="primary" link @click="del(row.id)">删除</el-button>
           </template>
         </kr-pro-table>
       </template>
@@ -27,8 +27,21 @@
 </template>
 <script setup lang="jsx">
 import { ref, reactive, onMounted } from 'vue';
+import {expressDelApi, expressListApi} from "@/api/model/express.js";
+import {sysDictDetailApi} from "@/api/model/sys.js";
+import {ElMessage, ElMessageBox} from "element-plus";
 // 表格配置项
-onMounted(() => {});
+onMounted(() => {
+  getDict()
+});
+let type1 = ref([]);
+let type2 = ref([]);
+let type3 = ref([]);
+async function getDict() {
+  type1.value = (await sysDictDetailApi('express_type1'))?.data || []
+  type2.value = (await sysDictDetailApi('express_type2'))?.data || []
+  type3.value = (await sysDictDetailApi('express_type3'))?.data || []
+}
 const proTable = ref();
 const initParam = reactive({});
 const selectProp = ref('1');
@@ -36,92 +49,89 @@ const columns= [
   { type: 'selection', label: '序号', width: 50 },
   { type: 'index', label: '序号', width: 60 },
   {
-    prop: 'relatedSkillsName1',
+    prop: 'expressId',
     label: '快递单号',
     isShowInputLabel: true,
     search: {
       el: 'input',
     },
     width: 150,
-    filterMultiple: false,
-    filters: [
-      { text: '任务告警', value: '1' },
-      { text: '实时告警', value: '1' },
-    ],
   },
   {
-    prop: 'relatedSkillsName2',
+    prop: 'issueAddress',
     label: '发出地址',
     width: 200,
   },
   {
-    prop: 'relatedSkillsName3',
+    prop: 'issueName',
     label: '发件人姓名',
     width: 150,
   },
   {
-    prop: 'relatedSkillsName4',
+    prop: 'issuePhone',
     label: '发件人手机号码',
     width: 150,
   },
   {
-    prop: 'relatedSkillsName5',
+    prop: 'collectAddress',
     label: '收件地址',
     width: 150,
   },
   {
-    prop: 'relatedSkillsName6',
+    prop: 'collectName',
     label: '收件人姓名',
     width: 150,
   },
   {
-    prop: 'relatedSkillsName7',
+    prop: 'collectPhone',
     label: '收件人手机号码',
     width: 150,
   },
   {
-    prop: 'relatedSkillsName8',
+    prop: 'expressType',
     label: '快递种类',
     isShowInputLabel: true,
     width: 150,
     search: {
       el: 'select',
     },
+    enum: ()=>sysDictDetailApi('express_type1'),
   },
   {
-    prop: 'relatedSkillsName9',
+    prop: 'expressSituation',
     label: ' 快递情况',
-    width: 150,
+    width: 100,
     filterMultiple: false,
     isShowInputLabel: true,
     fixed: 'right',
     search: {
       el: 'select',
     },
-    render(socpe) {
+    enum: ()=>sysDictDetailApi('express_type2'),
+    render(socpe,val) {
       return (
           <div class="alarm-tab-main">
-          <span class="alarm-tag" class={socpe.row.relatedSkillsName9 !== '正常' ? 'type1' : ''}>
-            {socpe.row.relatedSkillsName9}
+          <span class="alarm-tag" class={val !== '正常' ? 'type1' : ''}>
+            {val}
           </span>
           </div>
       );
     },
   },
   {
-    prop: 'relatedSkillsName10',
+    prop: 'expressState',
     label: '快递状态',
     fixed: 'right',
     isShowInputLabel: true,
-    width: 110,
+    width: 120,
     search: {
       el: 'select',
     },
-    filterMultiple: false,
-    render(socpe) {
+    enum: ()=>sysDictDetailApi('express_type3'),
+    render(socpe,val) {
       return (
           <div class="alarm-tab-main">
-            <span class="alarm-tag-line">{socpe.row.relatedSkillsName10}</span>
+            <span class="alarm-tag-line">{val}</span>
           </div>
       );
     },
@@ -130,52 +140,31 @@ const columns= [
 ];
 const getTableList = async (params) => {
   // await getAlarmListApi(params);
+     let {data=[],...res} = await expressListApi(params)
   return {
     data: {
-      datalist: [
-        {
-          relatedSkillsName1: 'sf12446467567',
-          relatedSkillsName2: '广东省深圳市罗湖区翠竹街道水库新村81栋412',
-          relatedSkillsName3: '张三',
-          relatedSkillsName4: '13632776128',
-          relatedSkillsName5: '广东省深圳市罗湖区翠竹街道水库新村107栋306',
-          relatedSkillsName6: '李四',
-          relatedSkillsName7: '14786439864',
-          relatedSkillsName8: '顺丰快递',
-          relatedSkillsName9: '正常',
-          relatedSkillsName10: '已发出',
-        },
-        {
-          relatedSkillsName1: 'sf12446467567',
-          relatedSkillsName2: '广东省深圳市罗湖区翠竹街道水库新村81栋412',
-          relatedSkillsName3: '张三',
-          relatedSkillsName4: '13632776128',
-          relatedSkillsName5: '广东省深圳市罗湖区翠竹街道水库新村107栋306',
-          relatedSkillsName6: '李四',
-          relatedSkillsName7: '14786439864',
-          relatedSkillsName8: '顺丰快递',
-          relatedSkillsName9: '丢失',
-          relatedSkillsName10: '派件中',
-        },
-        {
-          relatedSkillsName1: 'sf12446467567',
-          relatedSkillsName2: '广东省深圳市罗湖区翠竹街道水库新村81栋412',
-          relatedSkillsName3: '张三',
-          relatedSkillsName4: '13632776128',
-          relatedSkillsName5: '广东省深圳市罗湖区翠竹街道水库新村107栋306',
-          relatedSkillsName6: '李四',
-          relatedSkillsName7: '14786439864',
-          relatedSkillsName8: '顺丰快递',
-          relatedSkillsName9: '错误分配',
-          relatedSkillsName10: '运输中',
-        },
-      ],
-      total: 3,
-      pageNum: 1,
-      pageSize: 10,
+      datalist: data,
+      ...res
     },
   };
 };
+async function del(id) {
+  try {
+    await ElMessageBox.confirm(`是否删除?`, '温馨提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      draggable: true,
+    })
+    let {description} = await expressDelApi(id)
+    ElMessage.success(description)
+    proTable.value.getTableList()
+
+  } catch (e) {
+
+  }
+
+}
 //树操作
 const TreeData = ref([
   {

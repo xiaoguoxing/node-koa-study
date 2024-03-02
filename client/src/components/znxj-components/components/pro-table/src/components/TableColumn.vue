@@ -62,7 +62,7 @@ const renderLoop = (item, index) => {
         {{
           default: (scope) => {
             if (item._children) return item._children.map((child, index) => renderLoop(child, index));
-            if (item.render) return item.render(scope);
+            if (item.render) return item.render(scope,renderCellData(item, scope, index));
             if (slots[item.prop]) return slots[item.prop](scope);
             if (item.tag)
               return <ElTag type={getTagType(item, scope, index)}>{renderCellData(item, scope, index)}</ElTag>;
