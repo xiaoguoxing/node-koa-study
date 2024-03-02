@@ -30,7 +30,7 @@ export default {
 
     async update(ctx) {
         const req = ctx.request.body;
-        let type = await Sys_col.findOneAndUpdate(
+        let type = await express_col.findOneAndUpdate(
             {id: req.id},
             req
         );
