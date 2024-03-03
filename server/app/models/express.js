@@ -37,6 +37,12 @@ const expressSchema = new Schema({
     expressState: {
         type: String
     },
+    addTime: {
+        type: Date
+    },
+    addUserId: {
+        type: String
+    },
 }, { collection: 'express', versionKey: false});
 
 export default mongoose.model('express', expressSchema);

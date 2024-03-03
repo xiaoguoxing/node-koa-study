@@ -8,3 +8,9 @@ export const expressDelApi = (id) => {
 export const expressListApi = (params) => {
     return http.get(  `/express/list`,params);
 };
+export const expressDetailApi = (params) => {
+    return http.get(  `/express/detail`,params);
+};
+export const expressUpdateApi = (params) => {
+    return http.post(  `/express/update`,params);
+};

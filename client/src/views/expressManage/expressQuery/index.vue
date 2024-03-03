@@ -1,6 +1,5 @@
 <template>
     <kr-card class="flex-1 alarm-card-main" :header="'快递查询'" header-border>
-      <template v-if="pageType === 'list'">
         <kr-pro-table
             ref="proTable"
             :columns="columns"
@@ -16,13 +15,10 @@
         >
           <!-- 表格操作 -->
           <template #operation="{ row }">
-            <el-button type="primary" link @click="toDetailPage('detail', row)">编辑</el-button>
+            <el-button type="primary" link @click="toDetailPage(row.id)">编辑</el-button>
             <el-button type="primary" link @click="del(row.id)">删除</el-button>
           </template>
         </kr-pro-table>
-      </template>
-      <template v-else-if="pageType === 'detail'">
-      </template>
     </kr-card>
 </template>
 <script setup lang="jsx">
@@ -30,6 +26,8 @@ import { ref, reactive, onMounted } from 'vue';
 import {expressDelApi, expressListApi} from "@/api/model/express.js";
 import {sysDictDetailApi} from "@/api/model/sys.js";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {useRouter} from "vue-router";
+const router = useRouter()
 // 表格配置项
 onMounted(() => {
   getDict()
@@ -165,58 +163,8 @@ async function del(id) {
   }
 
 }
-//树操作
-const TreeData = ref([
-  {
-    id: 1,
-    label: '南沙水司',
-    children: [
-      {
-        id: 4,
-        label: '黄阁水厂',
-        children: [
-          {
-            id: 9,
-            label: '加药间',
-            children: [
-              {
-                id: 19,
-                label: '石灰螺杆泵、配药系统',
-              },
-              {
-                id: 13,
-                label: 'PAC投加系统',
-              },
-            ],
-          },
-          {
-            id: 10,
-            label: '配水井',
-            children: [
-              {
-                id: 19,
-                label: 'PAC、PAM流量计',
-              },
-              {
-                id: 13,
-                label: 'PAC溶液池',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-]);
-const changeTreeFilter = (val) => {
-  console.log(val);
-};
-// 弹框
-const id = ref();
-const pageType = ref('list');
-function toDetailPage(page, row) {
-  pageType.value = page;
-  id.value = row ? row.id : '';
+function toDetailPage(id) {
+  router.replace('/expressManage/expressAdd?id='+id)
 }
 </script>
 <style scoped lang="scss">

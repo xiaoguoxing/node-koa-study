@@ -4,10 +4,13 @@ import {v1 as uuidV1} from 'uuid'
 export default {
     async add(ctx) {
         const req = ctx.request.body;
+        const {user_id} = ctx.headers
         await express_col.create({
             id: uuidV1(),
             expressId: Math.round(Math.random()*9999999999)+'',
-            ...req
+            ...req,
+            addUserId:user_id,
+            addTime:Date.now()
         });
         ctx.body = {
             code: 200,
@@ -43,8 +46,10 @@ export default {
 
     async list(ctx) {
         const req = ctx.request.query;
+        const {user_id} = ctx.headers
         const total = await express_col.countDocuments()
         const list = await express_col.find({
+            addUserId: user_id,
             expressId: new RegExp(req.expressId),
             expressType: new RegExp(req.expressType),
             expressSituation:new RegExp(req.expressSituation),

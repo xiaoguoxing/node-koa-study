@@ -57,6 +57,7 @@ class RequestHttp {
                 // const globalStore = GlobalStore();
                 // * 如果当前请求不需要显示 loading,在 api 服务中通过指定的第三个参数: { headers: { noLoading: true } }来控制不显示loading，参见loginApi
                 config.headers.noLoading || showFullScreenLoading();
+                let info = JSON.parse(sessionStorage.getItem('userInfo')|| '{}')
                 // 公共请求头：登录标识：token,当前租户：currDs,当前组织：currOrg
                 // const token = globalStore.token;
                 // const currDs = globalStore.currDs;
@@ -65,8 +66,9 @@ class RequestHttp {
                     // jwt_token: token,
                     // DYNAMIC_DATA_SOURCE: currDs,
                     // DYNAMIC_AGENT_ORG: currOrg,
+                    User_ID:info.userId
                 };
-                return {...config, headers: {...config.headers, common: common}};
+                return {...config, headers: {...config.headers, ...common}};
             },
             (error) => {
                 return Promise.reject(error);

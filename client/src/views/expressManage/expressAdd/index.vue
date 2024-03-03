@@ -1,16 +1,22 @@
-<script setup async>
+<script setup>
 import {reactive, ref, onMounted} from 'vue';
 import {sysDictDetailApi} from '@/api/model/sys.js'
-import {expressAddApi} from "@/api/model/express.js";
+import {expressAddApi,expressDetailApi,expressUpdateApi} from "@/api/model/express.js";
 import {ElMessage} from "element-plus";
-import {useRouter} from 'vue-router'
+import {useRouter,useRoute} from 'vue-router'
 const router =  useRouter()
-const props = withDefaults(defineProps(), {});
+const route =  useRoute()
+const props = defineProps({
+  id:{
+    type:String
+  }
+});
 
 const emit = defineEmits();
 
 onMounted(() => {
   getDict()
+  getDetail()
 });
 let type1 = ref([]);
 let type2 = ref([]);
@@ -19,6 +25,13 @@ async function getDict() {
   type1.value = (await sysDictDetailApi('express_type1'))?.data || []
   type2.value = (await sysDictDetailApi('express_type2'))?.data || []
   type3.value = (await sysDictDetailApi('express_type3'))?.data || []
+}
+
+async function getDetail(){
+  if(route.query.id){
+    let res = await expressDetailApi({id:route.query.id})
+    formData.value = res.data ?? new BaseForm()
+  }
 }
 
 const rules = reactive({
@@ -32,6 +45,17 @@ const rules = reactive({
   expressType: [{required: true, message: '请选择'}],
   expressState: [{required: true, message: '请选择'}],
 });
+class BaseForm{
+  issueAddress = '';
+  issueName = '';
+  issuePhone = '';
+  collectAddress = '';
+  collectName = '';
+  collectPhone = '';
+  expressSituation = '';
+  expressType = '';
+  expressState = '';
+}
 let formData = ref({
   issueAddress: '',
   issueName: '',
@@ -46,8 +70,13 @@ let formData = ref({
 const formRef = ref()
 async function save(){
   await formRef.value.validate()
-  let {description} = await expressAddApi(formData.value)
-  ElMessage.success(description)
+  let res;
+  if(route.query.id){
+     res = await expressUpdateApi(formData.value)
+  }else {
+     res = await expressAddApi(formData.value)
+  }
+  ElMessage.success(res.description)
   await router.replace('/expressManage/expressQuery')
 }
 

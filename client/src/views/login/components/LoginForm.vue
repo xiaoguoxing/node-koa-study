@@ -61,11 +61,13 @@ const login = async (formEl) => {
     await formEl.validate();
     loading.value = true;
     try {
+      let res;
       if(isreg.value){
-        await registerApi(loginForm)
+        res = await registerApi(loginForm)
       }else {
-        await loginApi(loginForm)
+        res = await loginApi(loginForm)
       }
+      sessionStorage.setItem('userInfo',JSON.stringify(res.data))
       // 4.跳转到首页
       ElNotification({
         title: '',

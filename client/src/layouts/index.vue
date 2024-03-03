@@ -49,7 +49,7 @@
             src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
         />
         <el-dropdown>
-          <span class="username">张晓华</span>
+          <span class="username">{{info.username}}</span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="loginOut">退出登录</el-dropdown-item>
@@ -116,9 +116,9 @@
 
 <script setup>
 import {useRoute, useRouter} from 'vue-router';
-import {computed} from 'vue';
+import {computed,ref} from 'vue';
 import {useMenu} from "@/layouts/hooks/useMenu.js";
-
+let info = ref(JSON.parse(sessionStorage.getItem('userInfo')))
 const route = useRoute();
 const router = useRouter();
 const {activeMenu, menuList, handleClickMenu, subMenu} = useMenu();

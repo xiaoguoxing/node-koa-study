@@ -16,7 +16,7 @@ export default {
         }
         ctx.body = {
             code:200,
-            data:req,
+            data:user,
             description:'登录成功'
         }
     },
@@ -41,7 +41,7 @@ export default {
         if(newUser){
             ctx.body = {
                 code:200,
-                data:req,
+                data:newUser,
                 description:'注册成功'
             }
         }else {
