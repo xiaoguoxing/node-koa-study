@@ -51,17 +51,23 @@ flatMenuListGet.forEach((item) => {
   }
 })
 router.beforeEach(async (to, from, next) => {
-
+  const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
 
   // 2.动态设置标题
   document.title = to.meta.title ? `${to.meta.title} - 快递收发系统` : '快递收发系统';
 
 
   // 6.如果没有菜单列表，就重新请求菜单列表并添加动态路由
+  if(to.path==='/login'){
+    return next()
+  }else {
+    if(userInfo?.userId){
+      next();
+    }else {
+      next('/login');
+    }
+  }
 
-
-  // 7.正常访问页面
-  next();
 });
 
 

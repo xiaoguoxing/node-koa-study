@@ -4,7 +4,6 @@
 export const staticRouter = [
   {
     path: '/',
-    redirect: '/home', //HOME_URL
   },
   {
     path: '/login',

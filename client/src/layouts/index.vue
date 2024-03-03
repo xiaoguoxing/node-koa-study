@@ -135,6 +135,7 @@ const onBreadcrumbClick = (item, index) => {
   if (index !== breadcrumbList.value.length - 1) router.push(item.path);
 };
 function loginOut() {
+  sessionStorage.removeItem('userInfo')
   router.replace('/login')
 }
 </script>
