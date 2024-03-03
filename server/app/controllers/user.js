@@ -36,7 +36,8 @@ export default {
         const newUser = await User_col.create({
             userId,
             username: req.username,
-            password:req.password
+            password:req.password,
+            isAdmin:false
         });
         if(newUser){
             ctx.body = {
@@ -52,5 +53,50 @@ export default {
             }
         }
 
-    }
+    },
+    async delete(ctx){
+        const req = ctx.request.query;
+        let type = await User_col.findOneAndDelete(
+            {userId: req.userId}
+        );
+        ctx.body = {
+            code: 200,
+            data: type,
+            description: '删除成功'
+        }
+    },
+    async update(ctx){
+        const req = ctx.request.body;
+        let type = await User_col.findOneAndUpdate(
+            {userId: req.userId},
+            req
+        );
+        ctx.body = {
+            code: 200,
+            data: type,
+            description: '修改成功'
+        }
+    },
+    async detail(ctx){
+        const req = ctx.request.query;
+        let type = await User_col.findOne(
+            {userId: req.userId}
+        );
+        ctx.body = {
+            code: 200,
+            data: type,
+            description: '删除成功'
+        }
+    },
+    async list(ctx){
+        const req = ctx.request.query;
+        const user = await User_col.find({
+            username: new RegExp(req.username),
+        });
+        ctx.body = {
+            code:200,
+            data:user,
+            description:'查询列表成功'
+        }
+    },
 }

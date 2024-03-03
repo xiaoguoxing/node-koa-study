@@ -86,6 +86,20 @@ export default [
           "isKeepAlive": true
         }
       },
+      {
+        "path": "/sys/user",
+        "name": "user",
+        "component": "/sys/user/index",
+        "meta": {
+          "icon": "Edit",
+          "title": "用户管理",
+          "isLink": "",
+          "isHide": false,
+          "isFull": false,
+          "isAffix": false,
+          "isKeepAlive": true
+        }
+      },
     ]
   }
 ]

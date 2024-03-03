@@ -70,7 +70,7 @@ const login = async (formEl) => {
       sessionStorage.setItem('userInfo',JSON.stringify(res.data))
       // 4.跳转到首页
       ElNotification({
-        title: '',
+        title: res.data.username,
         message: '欢迎登录 快递收发系统',
         type: 'success',
         duration: 3000,

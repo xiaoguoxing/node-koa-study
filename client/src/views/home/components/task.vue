@@ -18,23 +18,32 @@
 
 <script setup name="task">
 import { ref, onMounted } from 'vue';
+import {home2Api} from "@/api/model/home.js";
 import chart from '../components/chart.vue';
-
 import ChartsConfig from '../config/chart.js';
+import {sysDictDetailApi} from "@/api/model/sys.js";
 
 let energyChartOption = ref({});
 let loading = ref(true);
-const dateValue = ref(['2024-04-01', '2024-04-06']);
+
+const dateValue = ref(['2024-03-01', '2024-04-06']);
 const initData = async () => {
+  let {data={}} = await home2Api({
+    startTime:dateValue.value[0],
+    endTime:dateValue.value[1],
+  })
   loading.value = false;
-  let yData = [
-    { name: '中通快递', data: [26, 37, 48, 59, 60, 70], color: '#0D60B4' },
-    { name: '圆通快递', data: [16, 27, 38, 49, 40, 30], color: '#007FFF' },
-    { name: '顺丰快递', data: [26, 37, 18, 29, 50, 30], color: '#06BF6E' },
-    { name: '韵达快递', data: [16, 37, 48, 49, 30, 20], color: '#FA802F' },
-  ];
+  let yData = [];
+  let arr = (await sysDictDetailApi('express_type1'))?.data || []
+  arr.forEach(i=>{
+    let arr = []
+    for (const [key,value] of Object.entries(data)) {
+      arr.push(value[i.label])
+    }
+    yData.push({name: i.label,data:arr})
+  })
   energyChartOption.value = ChartsConfig.lineOptions(
-    ['04-01', '04-02', '04-03', '04-04', '04-05', '04-06'],
+      Object.keys(data),
     '单位:件',
     yData
   );

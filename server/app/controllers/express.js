@@ -54,12 +54,12 @@ export default {
             expressType: new RegExp(req.expressType),
             expressSituation:new RegExp(req.expressSituation),
             expressState: new RegExp(req.expressState)
-        }, {_id: 0}).skip((req.pageNum - 1) *req.pageSize).limit(req.pageSize);
+        }, {_id: 0}).skip((req.pageNum - 1) *req.pageSize).limit(req.pageSize).sort('-addTime');
         if (list) {
             ctx.body = {
                 code: 200,
                 data: list,
-                total,
+                total:list.length,
                 pageNum:req.pageNum*1,
                 pageSize:req.pageSize*1,
                 description: '查询列表成功'

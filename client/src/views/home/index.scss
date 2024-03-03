@@ -24,11 +24,13 @@
         .equipment {
           width: 20%;
           .equip-title {
-            color: #666666;
+            font-size: 18px;
+            font-weight: bold;
           }
           .equip-num {
             display: flex;
             margin-top: 15px;
+            align-items: center;
             img {
               width: 48px;
               height: 36px;
@@ -42,7 +44,6 @@
               font-size: 28px;
               font-weight: 500;
               line-height: 28px;
-              color: #0d60b4;
             }
             .label {
               font-size: 14px;
@@ -161,10 +162,10 @@
       height: 100%;
       .flex-top {
         // height: calc(39.5% - 8px);
-        height: calc(39.5% - 8px);
+        height: calc(25% - 8px);
       }
       .flex-bottom {
-        height: calc(60.5% - 8px);
+        height: calc(75% - 8px);
         margin-top: 16px;
       }
     }

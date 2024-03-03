@@ -44,7 +44,7 @@
     <add-child ref="addChildRef"></add-child>
   </kr-card>
 </template>
-<script setup lang="jsx">
+<script setup>
 import {ref, reactive, onMounted} from 'vue';
 import {
   sysDictChildListApi,
