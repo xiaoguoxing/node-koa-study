@@ -129,7 +129,7 @@ export default {
         if (list) {
             ctx.body = {
                 code: 200,
-                data: list.keyList,
+                data: list?.keyList || [],
                 description: '查询列表成功'
             }
         }
@@ -142,7 +142,7 @@ export default {
         });
         ctx.body = {
             code: 200,
-            data: type.keyList,
+            data: type?.keyList||[],
             description: '获取详情成功'
         }
     }

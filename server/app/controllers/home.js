@@ -41,7 +41,7 @@ export default {
             addUserId: user_id,
             addTime: {$gte: new Date(req.startTime), $lt: new Date(req.endTime)},
         }, {_id: 0});
-        let {keyList} = await Sys_col.findOne({
+        let typeList = await Sys_col.findOne({
             key: 'express_type1',
         });
         list.map(i => {
@@ -52,7 +52,7 @@ export default {
                 let time1 = formatDate(new Date(i.addTime)).split(' ')[0]
                 return (time1 === timeKey)
             })
-            arr[timeKey] = Object.fromEntries(keyList.map(j=>{
+            arr[timeKey] = Object.fromEntries((typeList?.keyList||[]).map(j=>{
                 let a = newArr.filter(i=>i.expressType===j.value)
                 return[j.label,a.length]
             }))
